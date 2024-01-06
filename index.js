@@ -1,24 +1,23 @@
 require('dotenv').config();
-const ethers = require('ethers');
+const {ethers} = require('ethers');
+const { AlchemyProvider } = require("@ethersproject/providers");
 
 
-const abi = [{"inputs":[{"internalType":"string","name":"taskName","type":"string"}],"name":"addTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_index","type":"uint256"}],"name":"deleteTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getAllTask","outputs":[{"components":[{"internalType":"string","name":"name","type":"string"},{"internalType":"bool","name":"isDone","type":"bool"}],"internalType":"struct Todo.TodoList[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_index","type":"uint256"}],"name":"markDoneTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_index","type":"uint256"},{"internalType":"string","name":"_name","type":"string"}],"name":"updateTask","outputs":[],"stateMutability":"nonpayable","type":"function"}];
 
+const ABIcontract = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes","name":"pubkey","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"withdrawal_credentials","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"amount","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"signature","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"index","type":"bytes"}],"name":"DepositEvent","type":"event"},{"inputs":[{"internalType":"bytes","name":"pubkey","type":"bytes"},{"internalType":"bytes","name":"withdrawal_credentials","type":"bytes"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"bytes32","name":"deposit_data_root","type":"bytes32"}],"name":"deposit","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"get_deposit_count","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"get_deposit_root","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"pure","type":"function"}]
 
-const provider = new ethers.providers.AlchemyProvider(
-    'goerli', 
-    'yOg3sNqVEvvFsxwXRL3XMWiQopaGp2rb'
-);
+const provider = new AlchemyProvider('goerli', 'demo')
 
 async function main() {
+    console.log("I'm in already");
 
     const todoContract = new ethers.Contract(
-        '0xcc99D26061559e47F8330ee9C059cCBc9a18054b',
-        abi,
+        '0x8c5fecdC472E27Bc447696F431E425D02dd46a8c',
+        ABIcontract,
         provider
     );
 
-    const TasksContract = await todoContract.getAllTask();
+    const TasksContract = await todoContract.get_deposit_root();
     console.log(TasksContract);
 
 }
