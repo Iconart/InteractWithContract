@@ -1,25 +1,54 @@
-require('dotenv').config();
-const {ethers} = require('ethers');
 const { AlchemyProvider } = require("@ethersproject/providers");
+require('dotenv').config();
+const ethers = require('ethers');
 
+const contractABI = [
+  {
+    inputs: [],
+    name: 'count',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'dec',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'get',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'inc',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+];
 
+const provider = new AlchemyProvider(
+  'sepolia',
+  process.env.TESTNET_ALCHEMY_KEY
+);
 
-const ABIcontract = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes","name":"pubkey","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"withdrawal_credentials","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"amount","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"signature","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"index","type":"bytes"}],"name":"DepositEvent","type":"event"},{"inputs":[{"internalType":"bytes","name":"pubkey","type":"bytes"},{"internalType":"bytes","name":"withdrawal_credentials","type":"bytes"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"bytes32","name":"deposit_data_root","type":"bytes32"}],"name":"deposit","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"get_deposit_count","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"get_deposit_root","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"pure","type":"function"}]
-
-const provider = new AlchemyProvider('goerli', 'demo')
+const wallet = new ethers.Wallet(process.env.TESTNET_PRIVATE_KEY, provider);
 
 async function main() {
-    console.log("I'm in already");
+  const counterContract = new ethers.Contract(
+    '0x5F91eCd82b662D645b15Fd7D2e20E5e5701CCB7A',
+    contractABI,
+    wallet
+  );
 
-    const todoContract = new ethers.Contract(
-        '0x8c5fecdC472E27Bc447696F431E425D02dd46a8c',
-        ABIcontract,
-        provider
-    );
-
-    const TasksContract = await todoContract.get_deposit_root();
-    console.log(TasksContract);
-
+  await counterContract.inc();
 }
 
 main();
+
